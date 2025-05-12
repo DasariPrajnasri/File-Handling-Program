@@ -1,0 +1,91 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+void writeFile(const char *filename) {
+    FILE *fp = fopen(filename, "w");
+    if (fp == NULL) {
+        perror("Error creating/writing file");
+        return;
+    }
+
+    char data[256];
+    printf("Enter data to write to the file: ");
+    getchar(); // Clear buffer
+    fgets(data, sizeof(data), stdin);
+
+    fputs(data, fp);
+    fclose(fp);
+    printf("✅ Data written to '%s' successfully.\n", filename);
+}
+
+void readFile(const char *filename) {
+    FILE *fp = fopen(filename, "r");
+    if (fp == NULL) {
+        perror("Error opening file for reading");
+        return;
+    }
+
+    char ch;
+    printf("📄 Contents of '%s':\n", filename);
+    while ((ch = fgetc(fp)) != EOF) {
+        putchar(ch);
+    }
+    fclose(fp);
+}
+
+void appendFile(const char *filename) {
+    FILE *fp = fopen(filename, "a");
+    if (fp == NULL) {
+        perror("Error opening file for appending");
+        return;
+    }
+
+    char data[256];
+    printf("Enter data to append to the file: ");
+    getchar(); // Clear buffer
+    fgets(data, sizeof(data), stdin);
+
+    fputs(data, fp);
+    fclose(fp);
+    printf("✅ Data appended to '%s' successfully.\n", filename);
+}
+
+int main() {
+    const char *filename = "test_output.txt"; // Use safe, simple filename
+    int choice;
+
+    printf("Using file: %s\n", filename);
+
+    while (1) {
+        printf("\n📁 File Operation Menu:\n");
+        printf("1. Write (create/overwrite)\n");
+        printf("2. Read file\n");
+        printf("3. Append to file\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        if (scanf("%d", &choice) != 1) {
+            printf("Invalid input. Exiting.\n");
+            break;
+        }
+
+        switch (choice) {
+            case 1:
+                writeFile(filename);
+                break;
+            case 2:
+                readFile(filename);
+                break;
+            case 3:
+                appendFile(filename);
+                break;
+            case 4:
+                printf("Exiting.\n");
+                return 0;
+            default:
+                printf("Invalid choice. Try again.\n");
+        }
+    }
+
+    return 0;
+}
